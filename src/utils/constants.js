@@ -23,7 +23,7 @@ const getApiBaseUrl = () => {
   }
   // Default fallback
   return 'http://localhost:3002/api';
-};
+};  // version 1.0.0
 
 export const API_BASE_URL = getApiBaseUrl();
 export const APP_NAME = import.meta.env.VITE_APP_NAME || 'Emaar E-commerce';
