@@ -15,7 +15,7 @@ const api = axios.create({
 // Request interceptor - add token only for protected endpoints
 api.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('accessToken');
+    const token = localStorage.getItem('access_token');
     const url = config.url || '';
     
     // Check if endpoint is public
@@ -82,20 +82,29 @@ api.interceptors.response.use(
       // For protected endpoints, try to refresh token
       if (!isPublic) {
         originalRequest._retry = true;
-        const refreshToken = localStorage.getItem('refreshToken');
+        const refreshToken = localStorage.getItem('refresh_token');
         
         if (refreshToken) {
           try {
             const { data } = await axios.post(`${baseURL}/auth/refresh-token`, {
               refreshToken,
             });
-            localStorage.setItem('accessToken', data.accessToken);
-            localStorage.setItem('refreshToken', data.refreshToken);
-            originalRequest.headers.Authorization = `Bearer ${data.accessToken}`;
-            return api(originalRequest);
+            // API response structure: { success, data: { token: { access, refresh } } }
+            const newAccessToken = data?.data?.token?.access;
+            const newRefreshToken = data?.data?.token?.refresh;
+            
+            if (newAccessToken) {
+              localStorage.setItem('access_token', newAccessToken);
+              if (newRefreshToken) {
+                localStorage.setItem('refresh_token', newRefreshToken);
+              }
+              originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
+              return api(originalRequest);
+            }
+            throw new Error('Invalid token refresh response');
           } catch (refreshError) {
-            localStorage.removeItem('accessToken');
-            localStorage.removeItem('refreshToken');
+            localStorage.removeItem('access_token');
+            localStorage.removeItem('refresh_token');
             // Only redirect to login if accessing protected route
             if (url.includes('/checkout') || url.includes('/orders') || 
                 url.includes('/profile') || url.includes('/user')) {

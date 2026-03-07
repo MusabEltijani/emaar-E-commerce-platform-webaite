@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Helmet } from 'react-helmet-async';
@@ -6,7 +6,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useSelector, useDispatch } from 'react-redux';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FiShoppingBag, FiArrowRight, FiArrowLeft } from 'react-icons/fi';
-import { cartAPI } from '../services/api/cart';
+import { cartAPI, persistCartIds } from '../services/api/cart';
 import { setCart } from '../store/slices/cartSlice';
 import CartItem from '../components/cart/CartItem';
 import Button from '../components/common/Button';
@@ -16,7 +16,9 @@ import { CURRENCY_SYMBOL } from '../utils/constants';
 const Cart = () => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
-  const { items, total, subtotal } = useSelector((state) => state.cart);
+  const { items, total } = useSelector((state) => state.cart);
+  // API doesn't return subtotal separately — derive it from total
+  const subtotal = total;
 
   const { data, isLoading } = useQuery({
     queryKey: ['cart'],
@@ -24,8 +26,11 @@ const Cart = () => {
   });
 
   useEffect(() => {
-    if (data?.data) {
-      dispatch(setCart(data.data));
+    // Response: { success, data: { cart_id, session_id, items, total } }
+    const cart = data?.data?.data ?? data?.data;
+    if (cart) {
+      persistCartIds(cart);
+      dispatch(setCart(cart));
     }
   }, [data, dispatch]);
 

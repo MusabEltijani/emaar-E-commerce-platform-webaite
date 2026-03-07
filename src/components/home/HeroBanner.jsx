@@ -10,6 +10,8 @@ const HeroBanner = ({
   buttonText = "تسوق الآن",
   buttonLink = "/products",
   image,
+  video, // Video URL or path
+  isGif = false, // Set to true if using GIF
   bgColor = "bg-gray-900",
   textColor = "text-white",
   className = ""
@@ -21,67 +23,82 @@ const HeroBanner = ({
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
-      className={`relative ${bgColor} ${className} overflow-hidden`}
+      className={`relative ${className} overflow-hidden`}
+      style={{ width: '100vw', marginLeft: 'calc(-50vw + 50%)', marginRight: 'calc(-50vw + 50%)' }}
     >
-      {/* Background Pattern */}
-      <div className="absolute inset-0 opacity-10">
-        <div className="absolute top-0 left-0 w-96 h-96 bg-pink-500 rounded-full blur-3xl"></div>
-        <div className="absolute top-0 right-0 w-96 h-96 bg-yellow-500 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-0 left-1/2 w-96 h-96 bg-teal-500 rounded-full blur-3xl"></div>
+      {/* Full Width Video/Image Background */}
+      <div className="absolute inset-0 w-full h-full">
+        {video || isGif ? (
+          <>
+            {isGif ? (
+              <img
+                src={video || image}
+                alt={title}
+                className="w-full h-full object-cover"
+              />
+            ) : (
+              <video
+                autoPlay
+                loop
+                muted
+                playsInline
+                className="w-full h-full object-cover"
+              >
+                <source src={video} type="video/mp4" />
+                {/* Fallback image */}
+                {image && <img src={image} alt={title} className="w-full h-full object-cover" />}
+              </video>
+            )}
+          </>
+        ) : (
+          <img
+            src={image}
+            alt={title}
+            className="w-full h-full object-cover"
+          />
+        )}
+        
+        {/* Dark Overlay for better text readability */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent"></div>
       </div>
 
-      <div className="container mx-auto px-4 py-16 md:py-24 relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
-          {/* Text Content */}
-          <div className={`text-center lg:text-right ${textColor}`}>
-            <motion.h2
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 }}
-              className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6"
-            >
-              {title}
-            </motion.h2>
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
+      {/* Content Container - Full Width with text at bottom */}
+      <div className="relative z-10 w-full min-h-[500px] md:min-h-[600px] lg:min-h-[700px] flex items-end">
+        <div className="w-full px-4 md:px-8 lg:px-16 pb-12 md:pb-16 lg:pb-20">
+          {/* Text Content - Bottom Positioned */}
+          <div className={`max-w-4xl ${textColor}`}>
+            <motion.h1
+              initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3 }}
-              className="text-lg md:text-xl mb-8 text-gray-300"
+              className="text-4xl md:text-5xl lg:text-7xl font-bold mb-4 md:mb-6 leading-tight drop-shadow-2xl"
+            >
+              {title}
+            </motion.h1>
+            <motion.p
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5 }}
+              className="text-lg md:text-xl lg:text-2xl mb-6 md:mb-8 text-gray-100 drop-shadow-lg max-w-2xl"
             >
               {subtitle}
             </motion.p>
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.4 }}
+              transition={{ delay: 0.7 }}
             >
               <Link to={buttonLink}>
                 <Button
                   variant="primary"
                   size="lg"
-                  className="bg-teal-400 hover:bg-teal-500 text-gray-900 font-bold px-8 py-4 text-lg"
+                  className="bg-teal-400 hover:bg-teal-500 text-gray-900 font-bold px-8 py-4 text-lg shadow-2xl hover:scale-105 transition-transform"
                 >
                   {buttonText}
                 </Button>
               </Link>
             </motion.div>
           </div>
-
-          {/* Image */}
-          {image && (
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.3 }}
-              className="relative"
-            >
-              <img
-                src={image}
-                alt={title}
-                className="w-full h-auto rounded-lg shadow-2xl"
-              />
-            </motion.div>
-          )}
         </div>
       </div>
     </motion.section>

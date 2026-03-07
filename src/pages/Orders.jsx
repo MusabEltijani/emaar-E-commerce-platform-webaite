@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useQuery } from '@tanstack/react-query';
@@ -44,8 +44,17 @@ const Orders = () => {
     );
   }
 
-  const orders = data?.data?.data || [];
-  const pagination = data?.data?.pagination;
+  // Safely extract orders array — handles multiple possible API shapes:
+  // { data: [...] }  |  { data: { orders:[...], pagination } }  |  { data: { items:[...], pagination } }  |  { data: { data:[...] } }
+  const rawData = data?.data?.data ?? data?.data;
+  const orders = Array.isArray(rawData)
+    ? rawData
+    : Array.isArray(rawData?.orders)
+    ? rawData.orders
+    : Array.isArray(rawData?.items)
+    ? rawData.items
+    : [];
+  const pagination = data?.data?.pagination ?? rawData?.pagination;
 
   return (
     <div className="container mx-auto px-4 py-8">

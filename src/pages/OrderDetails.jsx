@@ -24,13 +24,17 @@ const OrderDetails = () => {
   const uploadReceiptMutation = useMutation({
     mutationFn: (formData) => ordersAPI.uploadReceipt(id, formData),
     onSuccess: () => {
-      toast.success(t('orders.receiptUploaded'));
+      toast.success(t('orders.receiptUploaded') || 'تم رفع الإيصال بنجاح');
       queryClient.invalidateQueries(['order', id]);
       setReceiptFile(null);
     },
+    onError: (error) => {
+      toast.error(error.response?.data?.message || t('orders.uploadError') || 'حدث خطأ أثناء رفع الإيصال');
+    },
   });
 
-  const order = data?.data;
+  // Extract order data from API response: { success, data: { ...order } }
+  const order = data?.data?.data || data?.data;
 
   const handleReceiptUpload = (e) => {
     e.preventDefault();
@@ -139,35 +143,67 @@ const OrderDetails = () => {
             </div>
           </Card>
 
-          {/* Receipt Upload */}
-          {order.status === ORDER_STATUSES.PENDING_PAYMENT && (
+          {/* Receipt Upload - Only for bank transfer orders */}
+          {order.payment_method === 'bank_transfer' && order.status === ORDER_STATUSES.PENDING_PAYMENT && (
             <Card>
-              <h2 className="text-xl font-bold mb-4">{t('orders.uploadReceipt')}</h2>
-              {order.receipt ? (
+              <h2 className="text-xl font-bold mb-4">{t('orders.uploadReceipt') || 'رفع إيصال التحويل'}</h2>
+              <p className="text-gray-600 mb-4">
+                {t('orders.uploadReceiptInfo') || 'يرجى رفع صورة إيصال التحويل البنكي لمراجعة الطلب'}
+              </p>
+              {order.receipt_url || order.receipt ? (
                 <div>
+                  <p className="text-green-600 mb-2">{t('orders.receiptUploaded') || 'تم رفع الإيصال بنجاح'}</p>
                   <img
-                    src={order.receipt}
+                    src={order.receipt_url || order.receipt}
                     alt="Receipt"
-                    className="max-w-md rounded-lg mb-4"
+                    className="max-w-md rounded-lg border"
                   />
                 </div>
               ) : (
                 <form onSubmit={handleReceiptUpload}>
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={(e) => setReceiptFile(e.target.files[0])}
-                    className="mb-4"
-                  />
+                  <div className="mb-4">
+                    <label className="block text-sm font-medium mb-2">
+                      {t('orders.selectReceipt') || 'اختر صورة الإيصال'}
+                    </label>
+                    <input
+                      type="file"
+                      accept="image/jpeg,image/jpg,image/png,image/webp"
+                      onChange={(e) => setReceiptFile(e.target.files[0])}
+                      className="block w-full text-sm text-gray-500
+                        file:mr-4 file:py-2 file:px-4
+                        file:rounded-full file:border-0
+                        file:text-sm file:font-semibold
+                        file:bg-primary-50 file:text-primary-700
+                        hover:file:bg-primary-100"
+                    />
+                    {receiptFile && (
+                      <p className="mt-2 text-sm text-gray-600">
+                        {t('orders.selectedFile')}: {receiptFile.name}
+                      </p>
+                    )}
+                  </div>
                   <Button
                     type="submit"
                     loading={uploadReceiptMutation.isLoading}
                     disabled={!receiptFile}
                   >
-                    {t('orders.uploadReceipt')}
+                    {t('orders.uploadReceipt') || 'رفع الإيصال'}
                   </Button>
                 </form>
               )}
+            </Card>
+          )}
+          
+          {/* Show receipt status for reviewing_payment */}
+          {order.status === ORDER_STATUSES.REVIEWING_PAYMENT && order.receipt_url && (
+            <Card>
+              <h2 className="text-xl font-bold mb-4">{t('orders.receipt') || 'الإيصال'}</h2>
+              <p className="text-blue-600 mb-4">{t('orders.receiptUnderReview') || 'جاري مراجعة الإيصال من قبل الإدارة'}</p>
+              <img
+                src={order.receipt_url}
+                alt="Receipt"
+                className="max-w-md rounded-lg border"
+              />
             </Card>
           )}
         </div>

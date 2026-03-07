@@ -41,12 +41,30 @@ const Checkout = () => {
   const onSubmit = async (data) => {
     setLoading(true);
     try {
+      // Include cart_id for guest users
+      const guestCartId = localStorage.getItem('guest_cart_id');
+      if (guestCartId) {
+        data.cart_id = guestCartId;
+      }
+      
       const response = await checkoutAPI.checkout(data);
+      
+      // Clear cart and guest cart ID
       dispatch(clearCart());
-      toast.success(t('checkout.orderPlaced'));
-      navigate(`/orders/${response.data.order.id}`);
+      localStorage.removeItem('guest_cart_id');
+      
+      toast.success(t('checkout.orderPlaced') || 'تم تقديم طلبك بنجاح');
+      
+      // Navigate to order details - extract order_id from response
+      const orderId = response.data?.data?.order_id || response.data?.order_id || response.data?.data?.id;
+      if (orderId) {
+        navigate(`/orders/${orderId}`);
+      } else {
+        navigate('/orders');
+      }
     } catch (error) {
       console.error('Checkout error:', error);
+      toast.error(error.response?.data?.message || t('checkout.error') || 'حدث خطأ أثناء معالجة طلبك');
     } finally {
       setLoading(false);
     }
@@ -93,10 +111,10 @@ const Checkout = () => {
                   {...register('payment_method')}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg"
                 >
-                  <option value="">{t('checkout.paymentMethod')}</option>
-                  <option value={PAYMENT_METHODS.CASH}>{t('checkout.cash')}</option>
-                  <option value={PAYMENT_METHODS.CARD}>{t('checkout.card')}</option>
-                  <option value={PAYMENT_METHODS.BANK_TRANSFER}>{t('checkout.bankTransfer')}</option>
+                  <option value="">{t('checkout.selectPaymentMethod') || 'اختر طريقة الدفع'}</option>
+                  <option value={PAYMENT_METHODS.BANK_TRANSFER}>{t('checkout.bankTransfer') || 'تحويل بنكي'}</option>
+                  <option value={PAYMENT_METHODS.COD}>{t('checkout.cod') || 'الدفع عند الاستلام'}</option>
+                  <option value={PAYMENT_METHODS.ONLINE}>{t('checkout.online') || 'الدفع الإلكتروني'}</option>
                 </select>
                 {errors.payment_method && (
                   <p className="mt-1 text-sm text-red-500">{errors.payment_method.message}</p>

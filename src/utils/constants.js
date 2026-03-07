@@ -1,28 +1,27 @@
 // Ensure the API base URL is properly formatted
 const getApiBaseUrl = () => {
-  // In development, use proxy (relative URL) to avoid CORS issues
+  // In development, use direct URL to port 3002 (no /api prefix)
   if (import.meta.env.DEV) {
-    return '/api';
+    return 'http://localhost:3002';
   }
   
   // In production, use full URL from environment variable
   const envUrl = import.meta.env.VITE_API_BASE_URL;
   if (envUrl) {
-    // Remove trailing slash if present and ensure it starts with http:// or https://
     let url = envUrl.trim().replace(/\/$/, '');
+    // Allow relative paths (e.g. /api for Docker nginx proxy)
+    if (url.startsWith('/')) {
+      return url;
+    }
     // Fix double http:// if present
     url = url.replace(/^http:\/\/http:\/\//, 'http://');
     if (!url.startsWith('http://') && !url.startsWith('https://')) {
       url = 'http://' + url;
     }
-    // Ensure /api is included in production URL
-    if (!url.endsWith('/api')) {
-      url = url.endsWith('/') ? url + 'api' : url + '/api';
-    }
     return url;
   }
-  // Default fallback
-  return 'http://localhost:3002/api';
+  // Default fallback - port 3002 without /api prefix
+  return 'http://localhost:3002';
 };  // version 1.0.0
 
 export const API_BASE_URL = getApiBaseUrl();
@@ -39,11 +38,12 @@ export const ORDER_STATUSES = {
   SHIPPED: 'shipped',
   OUT_FOR_DELIVERY: 'out_for_delivery',
   COMPLETED: 'completed',
+  CANCELLED: 'cancelled',
 };
 
 export const PAYMENT_METHODS = {
-  CASH: 'cash',
-  CARD: 'card',
   BANK_TRANSFER: 'bank_transfer',
+  COD: 'cod', // Cash on Delivery
+  ONLINE: 'online',
 };
 

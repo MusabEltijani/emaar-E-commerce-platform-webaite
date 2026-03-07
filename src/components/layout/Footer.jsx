@@ -20,13 +20,10 @@ const Footer = () => {
           {/* Brand Column */}
           <div>
             <div className="flex items-center gap-2 mb-4">
-              <img 
-                src="/assets/logo.png" 
-                alt="Emaar Logo" 
-                className="h-10 w-10 object-contain"
-                onError={(e) => {
-                  e.target.style.display = 'none';
-                }}
+              <img
+                src="/assets/logo.svg"
+                alt="Emaar Logo"
+                className="h-12 w-auto object-contain"
               />
             </div>
             <p className="text-gray-400 text-sm leading-relaxed mb-6">
@@ -158,7 +155,7 @@ const Footer = () => {
               />
               <button
                 type="submit"
-                className="bg-teal-400 hover:bg-teal-500 text-gray-900 px-6 py-3 rounded-lg font-semibold transition-colors"
+                className="bg-primary-500 hover:bg-primary-600 text-white px-6 py-3 rounded-lg font-semibold transition-colors"
               >
                 {t('footer.subscribe') || 'اشترك'}
               </button>

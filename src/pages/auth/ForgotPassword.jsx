@@ -5,7 +5,6 @@ import { z } from 'zod';
 import { useTranslation } from 'react-i18next';
 import { authAPI } from '../../services/api/auth';
 import toast from 'react-hot-toast';
-import Layout from '../../components/layout/Layout';
 import Button from '../../components/common/Button';
 import Input from '../../components/common/Input';
 import Card from '../../components/common/Card';
@@ -80,66 +79,64 @@ const ForgotPassword = () => {
   };
 
   return (
-    <Layout>
-      <div className="container mx-auto px-4 py-12">
-        <div className="max-w-md mx-auto">
-          <Card>
-            <h2 className="text-2xl font-bold mb-6 text-center">{t('auth.resetPassword')}</h2>
-            {step === 1 ? (
-              <form onSubmit={handleSubmitRequest(onRequestOTP)}>
-                <Input
-                  label={t('auth.phone')}
-                  type="tel"
-                  {...registerRequest('phone')}
-                  error={errorsRequest.phone?.message}
-                  placeholder="+966501234567"
-                  required
-                />
-                <Button type="submit" loading={loading} className="w-full">
-                  {t('auth.requestOTP')}
-                </Button>
-              </form>
-            ) : (
-              <form onSubmit={handleSubmitReset(onResetPassword)}>
-                <Input
-                  label={t('auth.phone')}
-                  type="tel"
-                  value={phone}
-                  {...registerReset('phone')}
-                  error={errorsReset.phone?.message}
-                  disabled
-                />
-                <Input
-                  label={t('auth.enterOTP')}
-                  type="text"
-                  {...registerReset('otp')}
-                  error={errorsReset.otp?.message}
-                  placeholder="123456"
-                  required
-                />
-                <Input
-                  label={t('auth.newPassword')}
-                  type="password"
-                  {...registerReset('newPassword')}
-                  error={errorsReset.newPassword?.message}
-                  required
-                />
-                <Input
-                  label={t('auth.confirmPassword')}
-                  type="password"
-                  {...registerReset('confirmPassword')}
-                  error={errorsReset.confirmPassword?.message}
-                  required
-                />
-                <Button type="submit" loading={loading} className="w-full">
-                  {t('auth.resetPassword')}
-                </Button>
-              </form>
-            )}
-          </Card>
-        </div>
+    <div className="container mx-auto px-4 py-12">
+      <div className="max-w-md mx-auto">
+        <Card>
+          <h2 className="text-2xl font-bold mb-6 text-center">{t('auth.resetPassword')}</h2>
+          {step === 1 ? (
+            <form onSubmit={handleSubmitRequest(onRequestOTP)}>
+              <Input
+                label={t('auth.phone')}
+                type="tel"
+                {...registerRequest('phone')}
+                error={errorsRequest.phone?.message}
+                placeholder="+966501234567"
+                required
+              />
+              <Button type="submit" loading={loading} className="w-full">
+                {t('auth.requestOTP')}
+              </Button>
+            </form>
+          ) : (
+            <form onSubmit={handleSubmitReset(onResetPassword)}>
+              <Input
+                label={t('auth.phone')}
+                type="tel"
+                value={phone}
+                {...registerReset('phone')}
+                error={errorsReset.phone?.message}
+                disabled
+              />
+              <Input
+                label={t('auth.enterOTP')}
+                type="text"
+                {...registerReset('otp')}
+                error={errorsReset.otp?.message}
+                placeholder="123456"
+                required
+              />
+              <Input
+                label={t('auth.newPassword')}
+                type="password"
+                {...registerReset('newPassword')}
+                error={errorsReset.newPassword?.message}
+                required
+              />
+              <Input
+                label={t('auth.confirmPassword')}
+                type="password"
+                {...registerReset('confirmPassword')}
+                error={errorsReset.confirmPassword?.message}
+                required
+              />
+              <Button type="submit" loading={loading} className="w-full">
+                {t('auth.resetPassword')}
+              </Button>
+            </form>
+          )}
+        </Card>
       </div>
-    </Layout>
+    </div>
   );
 };
 

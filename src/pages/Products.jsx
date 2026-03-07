@@ -2,17 +2,26 @@ import React, { useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useQuery } from '@tanstack/react-query';
+import { useDispatch, useSelector } from 'react-redux';
 import { productsAPI } from '../services/api/products';
 import { categoriesAPI } from '../services/api/categories';
 import { brandsAPI } from '../services/api/brands';
 import ProductCard from '../components/products/ProductCard';
+import ProductListItem from '../components/products/ProductListItem';
+import ViewToggle from '../components/common/ViewToggle';
+import AvailabilityFilter from '../components/filters/AvailabilityFilter';
+import PriceRangeSlider from '../components/filters/PriceRangeSlider';
+import ActiveFilters from '../components/filters/ActiveFilters';
 import Loader from '../components/common/Loader';
 import Input from '../components/common/Input';
 import Button from '../components/common/Button';
 import { SkeletonProductCard } from '../components/common/Skeleton';
+import { setViewMode, setAvailabilityFilter, setPriceRangeFilter } from '../store/slices/uiSlice';
 
 const Products = () => {
   const { t } = useTranslation();
+  const dispatch = useDispatch();
+  const { viewMode, filters: uiFilters } = useSelector((state) => state.ui);
   const [searchParams, setSearchParams] = useSearchParams();
   const [filters, setFilters] = useState({
     search: searchParams.get('search') || '',
@@ -95,19 +104,47 @@ const Products = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  const handleViewChange = (mode) => {
+    dispatch(setViewMode(mode));
+  };
+
+  const handleAvailabilityChange = (availability) => {
+    dispatch(setAvailabilityFilter(availability));
+  };
+
+  const handlePriceRangeChange = (priceRange) => {
+    dispatch(setPriceRangeFilter(priceRange));
+  };
+
+  const handleRemoveFilter = (filter) => {
+    if (filter.id === 'availability') {
+      dispatch(setAvailabilityFilter('all'));
+    } else if (filter.id === 'priceRange') {
+      dispatch(setPriceRangeFilter({ min: 0, max: 10000 }));
+    } else if (filter.type === 'brand') {
+      // Remove brand filter
+      handleFilterChange('brand_id', '');
+    }
+  };
+
   return (
     <div className="container mx-auto px-4 py-8">
-      <div className="mb-8">
-        <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">{t('products.title')}</h1>
-        <p className="text-gray-600">{t('products.filter')} {productsList.length} {t('common.products')}</p>
+      {/* Header with View Toggle */}
+      <div className="mb-8 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div>
+          <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">{t('products.title')}</h1>
+          <p className="text-gray-600">{productsList.length} {t('common.products')}</p>
+        </div>
+        <ViewToggle viewMode={viewMode} onViewChange={handleViewChange} />
       </div>
       <div className="flex flex-col md:flex-row gap-8">
         {/* Filters Sidebar */}
         <aside className="w-full md:w-64">
-          <div className="bg-white rounded-xl shadow-sm p-6 sticky top-24 border border-gray-100">
-            <h3 className="text-xl font-bold mb-4">{t('products.filter')}</h3>
+          <div className="bg-white rounded-xl shadow-sm p-6 sticky top-24 border border-gray-100 space-y-6">
+            <h3 className="text-xl font-bold">{t('products.filter')}</h3>
             
-            <div className="mb-4">
+            {/* Search */}
+            <div>
               <Input
                 label={t('common.search')}
                 value={filters.search}
@@ -116,12 +153,30 @@ const Products = () => {
               />
             </div>
 
-            <div className="mb-4">
-              <label className="block text-sm font-medium mb-2">{t('products.category')}</label>
+            {/* Availability Filter */}
+            <div className="border-t border-gray-200 pt-4">
+              <AvailabilityFilter
+                value={uiFilters.availability}
+                onChange={handleAvailabilityChange}
+              />
+            </div>
+
+            {/* Price Range Filter */}
+            <div className="border-t border-gray-200 pt-4">
+              <PriceRangeSlider
+                value={uiFilters.priceRange}
+                onChange={handlePriceRangeChange}
+                max={10000}
+              />
+            </div>
+
+            {/* Category Filter */}
+            <div className="border-t border-gray-200 pt-4">
+              <label className="block text-sm font-semibold mb-3 text-gray-900">{t('products.category')}</label>
               <select
                 value={filters.category_id}
                 onChange={(e) => handleFilterChange('category_id', e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
               >
                 <option value="">{t('products.category')}</option>
                 {categoriesList.map((cat) => (
@@ -132,12 +187,13 @@ const Products = () => {
               </select>
             </div>
 
-            <div className="mb-4">
-              <label className="block text-sm font-medium mb-2">{t('products.brand')}</label>
+            {/* Brand Filter */}
+            <div className="border-t border-gray-200 pt-4">
+              <label className="block text-sm font-semibold mb-3 text-gray-900">{t('products.brand')}</label>
               <select
                 value={filters.brand_id}
                 onChange={(e) => handleFilterChange('brand_id', e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
               >
                 <option value="">{t('products.brand')}</option>
                 {brandsList.map((brand) => (
@@ -148,12 +204,13 @@ const Products = () => {
               </select>
             </div>
 
-            <div className="mb-4">
-              <label className="block text-sm font-medium mb-2">{t('products.sortBy')}</label>
+            {/* Sort Filter */}
+            <div className="border-t border-gray-200 pt-4">
+              <label className="block text-sm font-semibold mb-3 text-gray-900">{t('products.sortBy')}</label>
               <select
                 value={filters.sort}
                 onChange={(e) => handleFilterChange('sort', e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
               >
                 <option value="">{t('products.sortBy')}</option>
                 <option value="price_asc">{t('products.priceAsc')}</option>
@@ -163,13 +220,16 @@ const Products = () => {
               </select>
             </div>
 
+            {/* Clear Filters Button */}
             <Button
               variant="outline"
-              className="w-full"
+              className="w-full border-t border-gray-200 pt-4"
               onClick={() => {
                 const resetFilters = { search: '', category_id: '', brand_id: '', sort: '', page: 1 };
                 setFilters(resetFilters);
                 setSearchParams({});
+                dispatch(setAvailabilityFilter('all'));
+                dispatch(setPriceRangeFilter({ min: 0, max: 10000 }));
               }}
             >
               {t('common.clear')}
@@ -177,8 +237,15 @@ const Products = () => {
           </div>
         </aside>
 
-        {/* Products Grid */}
+        {/* Products Grid/List */}
         <div className="flex-1">
+          {/* Active Filters */}
+          <ActiveFilters 
+            filters={uiFilters} 
+            onRemove={handleRemoveFilter}
+            className="mb-6"
+          />
+          
           {isLoading ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {Array.from({ length: 6 }).map((_, i) => (
@@ -187,20 +254,37 @@ const Products = () => {
             </div>
           ) : (
             <>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                {productsList.length > 0 ? (
-                  productsList.map((product) => (
-                    <ProductCard key={product.id} product={product} />
-                  ))
-                ) : (
-                  <div className="col-span-full text-center py-16">
-                    <p className="text-gray-500 text-xl mb-4">{t('products.noProducts')}</p>
-                    <Link to="/" className="text-primary-600 hover:text-primary-700 font-semibold">
-                      {t('common.back')} {t('common.home')}
-                    </Link>
-                  </div>
-                )}
-              </div>
+              {viewMode === 'grid' ? (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {productsList.length > 0 ? (
+                    productsList.map((product) => (
+                      <ProductCard key={product.id} product={product} showQuickAdd={true} />
+                    ))
+                  ) : (
+                    <div className="col-span-full text-center py-16">
+                      <p className="text-gray-500 text-xl mb-4">{t('products.noProducts')}</p>
+                      <Link to="/" className="text-primary-600 hover:text-primary-700 font-semibold">
+                        {t('common.back')} {t('common.home')}
+                      </Link>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <div className="flex flex-col gap-4">
+                  {productsList.length > 0 ? (
+                    productsList.map((product) => (
+                      <ProductListItem key={product.id} product={product} />
+                    ))
+                  ) : (
+                    <div className="text-center py-16">
+                      <p className="text-gray-500 text-xl mb-4">{t('products.noProducts')}</p>
+                      <Link to="/" className="text-primary-600 hover:text-primary-700 font-semibold">
+                        {t('common.back')} {t('common.home')}
+                      </Link>
+                    </div>
+                  )}
+                </div>
+              )}
 
               {/* Pagination */}
               {pagination && (pagination.totalPages || pagination.pages) > 1 && (

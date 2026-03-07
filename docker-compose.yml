@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  # Frontend service
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        VITE_API_BASE_URL: /api
+    container_name: emaar-frontend
+    ports:
+      - "3000:80"
+    environment:
+      - NODE_ENV=production
+    restart: unless-stopped
+    networks:
+      - emaar-shared
+
+  # Optional: Development mode with hot reload
+  frontend-dev:
+    image: node:18-alpine
+    container_name: emaar-frontend-dev
+    working_dir: /app
+    volumes:
+      - .:/app
+      - /app/node_modules
+    ports:
+      - "3001:3000"
+    command: sh -c "npm install && npm run dev -- --host"
+    environment:
+      - NODE_ENV=development
+    restart: unless-stopped
+    networks:
+      - emaar-shared
+    profiles:
+      - dev
+
+networks:
+  emaar-shared:
+    external: true

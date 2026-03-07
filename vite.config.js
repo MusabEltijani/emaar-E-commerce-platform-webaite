@@ -9,6 +9,7 @@ export default defineConfig({
     open: true,
     proxy: {
       '/api': {
+        // API backend server runs on port 3002
         target: 'http://localhost:3002',
         changeOrigin: true,
         secure: false,
