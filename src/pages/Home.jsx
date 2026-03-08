@@ -172,9 +172,9 @@ const Home = () => {
                       className="bg-white rounded-xl shadow-sm p-6 flex flex-col items-center justify-center hover:shadow-xl transition-all duration-300 border border-gray-100 hover:border-primary-300 group"
                     >
                       <img
-                        src={brand.logo || '/placeholder.png'}
+                        src={brand.logo_url || brand.logo || ''}
                         alt={brand.name || brand.name_ar}
-                        className="max-h-20 object-contain mb-3 group-hover:scale-110 transition-transform duration-300"
+                        className="w-full h-16 object-cover rounded-lg mb-3 group-hover:scale-105 transition-transform duration-300"
                       />
                       {brand.name && (
                         <span className="text-sm text-center text-gray-700 group-hover:text-primary-600 font-medium transition-colors">

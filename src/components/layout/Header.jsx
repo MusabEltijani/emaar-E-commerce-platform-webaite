@@ -123,7 +123,7 @@ const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
 
-  const cartItemCount = items.reduce((sum, item) => sum + (item.qty || 1), 0);
+  const cartItemCount = items.reduce((sum, item) => sum + (item.qty || item.quantity || 1), 0);
 
   const handleLogout = async () => {
     try {
@@ -164,9 +164,13 @@ const Header = () => {
               </Link>
             </div>
             <div className="flex items-center space-x-4 space-x-reverse">
-              <Link to="/cart" className="relative flex items-center gap-2 text-gray-600 hover:text-primary-600 transition-colors">
+              <Link to="/cart" className="relative flex items-center text-gray-600 hover:text-primary-600 transition-colors p-1">
                 <FiShoppingCart className="w-5 h-5" />
-                <span className="font-medium">{cartItemCount > 0 ? cartItemCount : '0'}</span>
+                {cartItemCount > 0 && (
+                  <span className="absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 bg-red-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center leading-none">
+                    {cartItemCount > 99 ? '99+' : cartItemCount}
+                  </span>
+                )}
               </Link>
             </div>
           </div>

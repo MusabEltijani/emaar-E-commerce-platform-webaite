@@ -103,7 +103,7 @@ const Orders = () => {
                   </div>
                   <p className="text-gray-600 text-sm">
                     {t('orders.orderDate')}:{' '}
-                    {format(new Date(order.createdAt), 'dd/MM/yyyy HH:mm')}
+                    {(() => { const d = new Date(order.created_at || order.createdAt); return isNaN(d) ? '—' : format(d, 'dd/MM/yyyy HH:mm'); })()}
                   </p>
                   <p className="text-lg font-bold mt-2">
                     {t('orders.total')}: {CURRENCY_SYMBOL} {order.total}

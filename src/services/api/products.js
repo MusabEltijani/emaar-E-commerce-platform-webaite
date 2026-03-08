@@ -12,13 +12,13 @@ const cleanParams = (params) => {
       return; // Skip this parameter
     }
     
-    // Convert ID fields and pagination fields to numbers if they're strings
-    if ((key === 'category_id' || key === 'brand_id' || key === 'page' || key === 'limit' || key === 'min_price' || key === 'max_price') && typeof value === 'string') {
+    // category_id is integer; page/limit/prices are numbers — brand_id is UUID (keep as string)
+    if ((key === 'category_id' || key === 'page' || key === 'limit' || key === 'min_price' || key === 'max_price') && typeof value === 'string') {
       const numValue = parseInt(value, 10);
       if (!isNaN(numValue) && numValue > 0) {
         cleaned[key] = numValue;
       }
-    } 
+    }
     // Handle boolean fields
     else if ((key === 'is_featured') && typeof value === 'string') {
       cleaned[key] = value === 'true' || value === '1';

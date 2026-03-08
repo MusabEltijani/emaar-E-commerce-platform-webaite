@@ -1,10 +1,11 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
+import { useQueryClient } from '@tanstack/react-query';
 import { authAPI } from '../../services/api/auth';
 import { setCredentials } from '../../store/slices/authSlice';
 import { cartStorage } from '../../services/api/cart';
@@ -14,14 +15,16 @@ import Input from '../../components/common/Input';
 import Card from '../../components/common/Card';
 
 const loginSchema = z.object({
-  phone: z.string().min(1, 'Phone is required'),
+  phone: z.string().regex(/^\+249\d{9}$/, 'Enter a valid Sudan phone number (+249XXXXXXXXX)'),
   password: z.string().min(8, 'Password must be at least 8 characters'),
 });
 
 const Login = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const location = useLocation();
   const dispatch = useDispatch();
+  const queryClient = useQueryClient();
   const [loading, setLoading] = useState(false);
 
   const {
@@ -54,11 +57,15 @@ const Login = () => {
         refreshToken: tokens.refresh,
       }));
 
-      // Clear guest cart IDs — server has merged them into the user's cart
-      cartStorage.clear();
+      // Keep guest IDs — Cart page will pass them on the next GET /cart so the
+      // backend can merge, then Cart.jsx clears them after a successful merge.
+      queryClient.invalidateQueries({ queryKey: ['cart'] });
 
       toast.success(t('auth.loginSuccess') || 'تم تسجيل الدخول بنجاح');
-      navigate('/');
+
+      // Redirect back to the page that sent the user to login (e.g. /checkout or /cart)
+      const from = location.state?.from?.pathname || '/';
+      navigate(from, { replace: true });
     } catch (error) {
       console.error('Login error:', error);
       toast.error(error.response?.data?.message || t('auth.loginError') || 'خطأ في تسجيل الدخول');
@@ -78,7 +85,7 @@ const Login = () => {
               type="tel"
               {...register('phone')}
               error={errors.phone?.message}
-              placeholder="+966501234567"
+              placeholder="+249912345678"
               required
             />
             <Input

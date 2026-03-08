@@ -1,9 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useInView } from 'react-intersection-observer';
 
-// Inline SVG placeholder — works even when no static file exists
+// Inline SVG placeholder — neutral image/product icon, no person silhouette
 const PLACEHOLDER_SVG =
-  "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='300' viewBox='0 0 400 300'%3E%3Crect width='400' height='300' fill='%23f3f4f6'/%3E%3Cg transform='translate(200,150)'%3E%3Ccircle cx='0' cy='-20' r='28' fill='%23d1d5db'/%3E%3Cellipse cx='0' cy='40' rx='48' ry='28' fill='%23d1d5db'/%3E%3C/g%3E%3C/svg%3E";
+  "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='300' viewBox='0 0 400 300'%3E%3Crect width='400' height='300' fill='%23f9fafb'/%3E%3Crect x='140' y='90' width='120' height='90' rx='8' fill='%23e5e7eb'/%3E%3Ccircle cx='168' cy='114' r='10' fill='%23d1d5db'/%3E%3Cpolygon points='140,180 185,135 215,162 240,142 260,180' fill='%23d1d5db'/%3E%3C/svg%3E";
 
 const Image = ({
   src,

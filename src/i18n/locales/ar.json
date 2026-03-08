@@ -40,7 +40,8 @@
     "off": "خصم",
     "openMenu": "فتح القائمة",
     "closeMenu": "إغلاق القائمة",
-    "aboutUs": "من نحن"
+    "aboutUs": "من نحن",
+    "linkCopied": "تم نسخ الرابط"
   },
   "auth": {
     "loginTitle": "تسجيل الدخول",
@@ -64,7 +65,9 @@
     "enterOTP": "أدخل رمز التحقق",
     "otpSent": "تم إرسال رمز التحقق",
     "resetSuccess": "تم إعادة تعيين كلمة المرور بنجاح",
-    "loginRequired": "يجب تسجيل الدخول لإضافة المنتجات إلى السلة"
+    "loginRequired": "يجب تسجيل الدخول لإضافة المنتجات إلى السلة",
+    "loginError": "البريد الإلكتروني أو كلمة المرور غير صحيحة",
+    "registerError": "فشل إنشاء الحساب. يرجى المحاولة مرة أخرى."
   },
   "products": {
     "title": "المنتجات",
@@ -154,7 +157,11 @@
     "phone": "رقم الهاتف",
     "cash": "نقدي",
     "card": "بطاقة",
-    "bankTransfer": "تحويل بنكي"
+    "bankTransfer": "تحويل بنكي",
+    "cod": "الدفع عند الاستلام",
+    "online": "الدفع الإلكتروني",
+    "selectPaymentMethod": "اختر طريقة الدفع",
+    "error": "فشل تأكيد الطلب. يرجى المحاولة مرة أخرى."
   },
   "orders": {
     "title": "طلباتي",
@@ -167,6 +174,13 @@
     "noOrders": "لا توجد طلبات",
     "uploadReceipt": "رفع إيصال الدفع",
     "receiptUploaded": "تم رفع الإيصال بنجاح",
+    "uploadError": "فشل رفع الإيصال. يرجى المحاولة مرة أخرى.",
+    "receipt": "إيصال الدفع",
+    "receiptUnderReview": "إيصالك قيد المراجعة",
+    "selectReceipt": "اختر ملف الإيصال",
+    "selectedFile": "الملف المختار",
+    "uploadReceiptInfo": "يرجى رفع إيصال الدفع لتأكيد طلبك",
+    "timeline": "سجل الطلب",
     "statuses": {
       "pending_payment": "في انتظار الدفع",
       "reviewing_payment": "جاري مراجعة الدفع",
@@ -195,6 +209,7 @@
     "categoriesDescription": "استكشف تغطيتنا الشاملة عبر فئات المنتجات المختلفة",
     "brands": "العلامات التجارية",
     "specialOffers": "عروض خاصة",
+    "newArrivals": "وصل حديثاً",
     "deals": "العروض",
     "customerReviews": "آراء العملاء",
     "latestArticles": "أحدث المقالات"

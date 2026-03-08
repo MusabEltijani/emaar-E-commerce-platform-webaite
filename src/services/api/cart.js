@@ -25,35 +25,28 @@ export const persistCartIds = (responseData) => {
 };
 
 export const cartAPI = {
-  // GET /cart — pass cart_id for guests
+  // GET /cart — always pass guest IDs if present so the backend can merge
+  // them into the authenticated user's cart on the first post-login fetch.
   getCart: () => {
     const params = {};
-    const hasToken = !!localStorage.getItem('access_token');
-    if (!hasToken) {
-      const cartId = cartStorage.getCartId();
-      const sessionId = cartStorage.getSessionId();
-      if (cartId) params.cart_id = cartId;
-      if (sessionId) params.session_id = sessionId;
-    }
+    const cartId = cartStorage.getCartId();
+    const sessionId = cartStorage.getSessionId();
+    if (cartId) params.cart_id = cartId;
+    if (sessionId) params.session_id = sessionId;
     return api.get('/cart', { params });
   },
 
-  // POST /cart/add
-  addToCart: ({ product_id, quantity, cart_id, session_id } = {}) => {
+  // POST /cart/add — always pass saved cart IDs so the backend can associate
+  // the item with the correct cart whether the user is guest or authenticated.
+  addToCart: ({ product_id, quantity } = {}) => {
     if (!product_id || !quantity) {
       return Promise.reject(new Error('product_id and quantity are required'));
     }
     const body = { product_id, quantity };
-
-    const hasToken = !!localStorage.getItem('access_token');
-    if (!hasToken) {
-      // Pass existing cart_id/session_id if we have them
-      const savedCartId = cart_id || cartStorage.getCartId();
-      const savedSessionId = session_id || cartStorage.getSessionId();
-      if (savedCartId) body.cart_id = savedCartId;
-      if (savedSessionId) body.session_id = savedSessionId;
-    }
-
+    const savedCartId = cartStorage.getCartId();
+    const savedSessionId = cartStorage.getSessionId();
+    if (savedCartId) body.cart_id = savedCartId;
+    if (savedSessionId) body.session_id = savedSessionId;
     return api.post('/cart/add', body);
   },
 

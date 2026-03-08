@@ -6,7 +6,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useSelector, useDispatch } from 'react-redux';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FiShoppingBag, FiArrowRight, FiArrowLeft } from 'react-icons/fi';
-import { cartAPI, persistCartIds } from '../services/api/cart';
+import { cartAPI, persistCartIds, cartStorage } from '../services/api/cart';
 import { setCart } from '../store/slices/cartSlice';
 import CartItem from '../components/cart/CartItem';
 import Button from '../components/common/Button';
@@ -31,6 +31,11 @@ const Cart = () => {
     if (cart) {
       persistCartIds(cart);
       dispatch(setCart(cart));
+      // If authenticated and we just received the merged cart, clear guest IDs
+      // so they aren't sent on future requests.
+      if (localStorage.getItem('access_token')) {
+        cartStorage.clear();
+      }
     }
   }, [data, dispatch]);
 

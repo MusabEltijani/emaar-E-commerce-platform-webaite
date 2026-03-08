@@ -101,18 +101,13 @@ const Categories = () => {
                       >
                         {/* Category Image */}
                         <div className="relative h-64 overflow-hidden bg-gradient-to-br from-gray-50 to-gray-100">
-                          {category.image ? (
+                          {(category.icon || category.image) ? (
                             <Image
-                              src={category.image}
+                              src={category.icon || category.image}
                               alt={categoryName}
                               className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                               lazy={true}
-                              fallback="/placeholder.png"
                             />
-                          ) : category.icon ? (
-                            <div className="w-full h-full flex items-center justify-center group-hover:scale-110 transition-transform duration-500">
-                              <span className="text-8xl">{category.icon}</span>
-                            </div>
                           ) : (
                             <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary-100 to-primary-200">
                               <span className="text-6xl font-bold text-primary-600">

@@ -197,12 +197,38 @@ const Footer = () => {
         {/* Payment Methods */}
         <div className="border-t border-gray-800 pt-8 mb-8">
           <h5 className="font-semibold mb-4 text-white text-lg">{t('footer.paymentMethods') || 'طرق الدفع'}</h5>
-          <div className="flex flex-wrap items-center gap-4">
-            <img src="https://www.visa.com/dam/VCOM/regional/me/arabic/images/visa-logo.png" alt="Visa" className="h-8 object-contain opacity-80" />
-            <img src="https://www.mastercard.com/content/dam/mccom/global/logos/logo-mastercard.svg" alt="Mastercard" className="h-8 object-contain opacity-80" />
-            <img src="https://www.mada.com.sa/images/logo.png" alt="Mada" className="h-8 object-contain opacity-80" />
-            <img src="https://www.apple.com/v/apple-pay/a/images/overview/apple_pay_logo_large_2x.png" alt="Apple Pay" className="h-8 object-contain opacity-80" />
-            <img src="https://www.stcpay.com.sa/images/logo.png" alt="STC Pay" className="h-8 object-contain opacity-80" />
+          <div className="flex flex-wrap items-center gap-3">
+            {/* Visa */}
+            <div className="bg-white rounded-md px-3 py-1.5 flex items-center justify-center h-9 min-w-[56px]">
+              <span className="text-[#1A1F71] font-black text-lg tracking-tight italic">VISA</span>
+            </div>
+            {/* Mastercard */}
+            <div className="bg-white rounded-md px-2 py-1.5 flex items-center justify-center h-9 gap-0.5">
+              <div className="w-6 h-6 rounded-full bg-[#EB001B] opacity-90" />
+              <div className="w-6 h-6 rounded-full bg-[#F79E1B] opacity-90 -ms-3" />
+              <span className="text-[10px] font-bold text-gray-700 ms-1.5">mastercard</span>
+            </div>
+            {/* Fawry */}
+            <div className="bg-[#F37021] rounded-md px-3 py-1.5 flex items-center justify-center h-9 min-w-[56px]">
+              <span className="text-white font-black text-base tracking-wide">فوري</span>
+            </div>
+            {/* CashiPay */}
+            <div className="bg-[#00A99D] rounded-md px-3 py-1.5 flex items-center h-9 gap-1">
+              <span className="text-white font-black text-sm">كاشي</span>
+              <div className="flex flex-col leading-none">
+                <span className="text-white text-[9px] font-bold">Pay</span>
+                <span className="text-white text-[9px]">يلا</span>
+              </div>
+            </div>
+            {/* Tether (USDT) */}
+            <div className="bg-[#26A17B] rounded-md px-3 py-1.5 flex items-center justify-center h-9 min-w-[44px] gap-1">
+              <span className="text-white font-black text-lg">₮</span>
+              <span className="text-white text-xs font-semibold">USDT</span>
+            </div>
+            {/* Bankak */}
+            <div className="bg-[#8B1A1A] rounded-md px-3 py-1.5 flex items-center justify-center h-9 min-w-[56px]">
+              <span className="text-white font-black text-sm tracking-wide">بنكك</span>
+            </div>
           </div>
         </div>
 

@@ -105,7 +105,7 @@ VITE_API_BASE_URL=http://localhost:3002
 VITE_APP_NAME=Emaar E-commerce
 VITE_DEFAULT_LANGUAGE=ar
 VITE_CURRENCY=SDG
-VITE_CURRENCY_SYMBOL=جنيه سوداني
+VITE_CURRENCY_SYMBOL=جنيه
 ```
 
 ## Architecture

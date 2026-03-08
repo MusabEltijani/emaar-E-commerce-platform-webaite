@@ -14,7 +14,7 @@ import Card from '../../components/common/Card';
 
 const registerSchema = z.object({
   name: z.string().min(1, 'Name is required'),
-  phone: z.string().min(1, 'Phone is required'),
+  phone: z.string().regex(/^\+249\d{9}$/, 'Enter a valid Sudan phone number (+249XXXXXXXXX)'),
   email: z.string().email('Invalid email').optional().or(z.literal('')),
   password: z.string().min(8, 'Password must be at least 8 characters'),
   confirmPassword: z.string().min(8, 'Password must be at least 8 characters'),
@@ -88,7 +88,7 @@ const Register = () => {
               type="tel"
               {...register('phone')}
               error={errors.phone?.message}
-              placeholder="+966501234567"
+              placeholder="+249912345678"
               required
             />
             <Input

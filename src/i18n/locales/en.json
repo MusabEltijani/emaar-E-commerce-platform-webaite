@@ -39,7 +39,9 @@
     "terms": "Terms & Conditions",
     "off": "OFF",
     "openMenu": "Open menu",
-    "closeMenu": "Close menu"
+    "closeMenu": "Close menu",
+    "aboutUs": "About Us",
+    "linkCopied": "Link copied to clipboard"
   },
   "auth": {
     "loginTitle": "Login",
@@ -62,7 +64,10 @@
     "requestOTP": "Request OTP",
     "enterOTP": "Enter OTP",
     "otpSent": "OTP sent successfully",
-    "resetSuccess": "Password reset successfully"
+    "resetSuccess": "Password reset successfully",
+    "loginError": "Invalid email or password",
+    "registerError": "Registration failed. Please try again.",
+    "loginRequired": "Please log in to add items to cart"
   },
   "products": {
     "title": "Products",
@@ -134,7 +139,12 @@
     "addMultiple": "Add {{count}}",
     "estimatedDelivery": "Estimated Delivery",
     "savedForLater": "Saved for Later",
-    "moveToCart": "Move to Cart"
+    "moveToCart": "Move to Cart",
+    "item": "item",
+    "items": "items",
+    "freeShippingMessage": "Add {amount} more for free shipping",
+    "secureCheckout": "Secure & Protected Checkout",
+    "itemTotal": "Item Total"
   },
   "checkout": {
     "title": "Checkout",
@@ -147,7 +157,11 @@
     "phone": "Phone Number",
     "cash": "Cash",
     "card": "Card",
-    "bankTransfer": "Bank Transfer"
+    "bankTransfer": "Bank Transfer",
+    "cod": "Cash on Delivery",
+    "online": "Online Payment",
+    "selectPaymentMethod": "Select Payment Method",
+    "error": "Failed to place order. Please try again."
   },
   "orders": {
     "title": "My Orders",
@@ -160,6 +174,13 @@
     "noOrders": "No orders found",
     "uploadReceipt": "Upload Receipt",
     "receiptUploaded": "Receipt uploaded successfully",
+    "uploadError": "Failed to upload receipt. Please try again.",
+    "receipt": "Payment Receipt",
+    "receiptUnderReview": "Your receipt is under review",
+    "selectReceipt": "Select receipt file",
+    "selectedFile": "Selected file",
+    "uploadReceiptInfo": "Please upload your payment receipt to confirm your order",
+    "timeline": "Order Timeline",
     "statuses": {
       "pending_payment": "Pending Payment",
       "reviewing_payment": "Reviewing Payment",
@@ -187,11 +208,16 @@
     "categories": "Product Categories",
     "categoriesDescription": "Explore our comprehensive coverage across different product categories",
     "brands": "Brands",
-    "specialOffers": "Special Offers"
+    "specialOffers": "Special Offers",
+    "deals": "Deals",
+    "newArrivals": "New Arrivals"
   },
   "categories": {
     "description": "Discover the best products with ratings, reviews, and competitive prices",
     "explore": "Explore",
+    "noCategories": "No categories available",
+    "needHelp": "Need Help?",
+    "helpDescription": "If you can't find the category you're looking for, contact us and we'll be happy to help",
     "features": {
       "ratings": "Product Ratings",
       "products": "Wide Selection",
@@ -223,7 +249,14 @@
     "newsletterText": "Get the latest news and updates from Emaar",
     "emailPlaceholder": "Enter your email",
     "subscribe": "Subscribe",
-    "copyright": "and related marks are registered trademarks of Emaar."
+    "copyright": "and related marks are registered trademarks of Emaar.",
+    "customerService": "Customer Service",
+    "faq": "Frequently Asked Questions",
+    "shipping": "Shipping & Delivery",
+    "returns": "Returns & Exchanges",
+    "wishlist": "Wishlist",
+    "addresses": "Addresses",
+    "paymentMethods": "Payment Methods"
   },
   "errors": {
     "invalidProduct": "Invalid product",
