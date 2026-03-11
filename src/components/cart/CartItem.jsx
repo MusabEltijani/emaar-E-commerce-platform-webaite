@@ -10,8 +10,13 @@ import toast from 'react-hot-toast';
 import { CURRENCY_SYMBOL } from '../../utils/constants';
 import Image from '../common/Image';
 
-// Extract full cart from API response: { success, data: { cart_id, session_id, items, total } }
-const extractCart = (res) => res?.data?.data ?? res?.data;
+// Extract full cart from API response only if it actually contains an items array.
+// A bare { success: true, message: "..." } response must return null so the
+// caller falls back to the optimistic local update instead of wiping the cart.
+const extractCart = (res) => {
+  const cart = res?.data?.data ?? res?.data;
+  return Array.isArray(cart?.items) ? cart : null;
+};
 
 const CartItem = ({ item }) => {
   const { t, i18n } = useTranslation();
@@ -20,10 +25,11 @@ const CartItem = ({ item }) => {
   const [loadingRemove, setLoadingRemove] = useState(false);
 
   // API returns flat fields on item directly
+  const itemQty = item.qty ?? item.quantity ?? 1;
   const productName = (i18n.language === 'ar' && item.name_ar) ? item.name_ar : item.name;
   const productImage = item.thumbnail_url;
   const productPrice = parseFloat(item.price || 0);
-  const itemSubtotal = parseFloat(item.subtotal || (productPrice * item.qty) || 0);
+  const itemSubtotal = parseFloat(item.subtotal || (productPrice * itemQty) || 0);
 
   const handleUpdateQuantity = async (newQty) => {
     if (newQty < 1) return;
@@ -114,8 +120,8 @@ const CartItem = ({ item }) => {
             {/* Qty controls */}
             <div className="flex items-center border border-gray-200 rounded-lg overflow-hidden bg-gray-50">
               <button
-                onClick={() => handleUpdateQuantity(item.qty - 1)}
-                disabled={item.qty <= 1 || loadingQty}
+                onClick={() => handleUpdateQuantity(itemQty - 1)}
+                disabled={itemQty <= 1 || loadingQty}
                 className="px-2 py-1.5 hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
                 aria-label="Decrease quantity"
               >
@@ -124,10 +130,10 @@ const CartItem = ({ item }) => {
               <span className="w-8 text-center text-sm font-semibold text-gray-900 select-none">
                 {loadingQty
                   ? <span className="inline-block w-3 h-3 border-2 border-gray-400 border-t-transparent rounded-full animate-spin align-middle" />
-                  : item.qty}
+                  : itemQty}
               </span>
               <button
-                onClick={() => handleUpdateQuantity(item.qty + 1)}
+                onClick={() => handleUpdateQuantity(itemQty + 1)}
                 disabled={loadingQty}
                 className="px-2 py-1.5 hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
                 aria-label="Increase quantity"

@@ -9,7 +9,8 @@ const ImageGallery = ({ images = [], alt = 'Product', className = '' }) => {
   const [touchEnd, setTouchEnd] = useState(null);
 
   // Ensure we have at least one image
-  const imageList = images.length > 0 ? images : ['/placeholder.png'];
+  const imagesArray = Array.isArray(images) ? images : (images ? [images] : []);
+  const imageList = imagesArray.length > 0 ? imagesArray : ['/placeholder.png'];
 
   // Handle keyboard navigation
   useEffect(() => {
