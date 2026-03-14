@@ -215,8 +215,8 @@ const Products = () => {
                 <option value="">{t('products.sortBy')}</option>
                 <option value="price_asc">{t('products.priceAsc')}</option>
                 <option value="price_desc">{t('products.priceDesc')}</option>
-                <option value="name_asc">{t('products.nameAsc')}</option>
-                <option value="name_desc">{t('products.nameDesc')}</option>
+                <option value="newest">{t('products.newest')}</option>
+                <option value="popular">{t('products.popular')}</option>
               </select>
             </div>
 
