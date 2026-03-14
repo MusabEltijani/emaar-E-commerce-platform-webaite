@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useSelector, useDispatch } from 'react-redux';
-import { FiShoppingCart, FiUser, FiMenu, FiX, FiSearch, FiLogOut, FiPackage, FiSettings } from 'react-icons/fi';
+import { FiShoppingCart, FiUser, FiMenu, FiX, FiSearch, FiLogOut, FiPackage, FiSettings, FiShoppingBag } from 'react-icons/fi';
 import { logout } from '../../store/slices/authSlice';
 import { setLanguage } from '../../store/slices/uiSlice';
 import { authAPI } from '../../services/api/auth';
@@ -185,9 +185,9 @@ const Header = () => {
             <img src="/assets/logo.svg" alt="Emaar Logo" className="h-20 w-auto object-contain" />
           </Link>
 
-          {/* Search Bar */}
-          <form onSubmit={handleSearch} className="flex-1 max-w-2xl mx-4">
-            <div className="relative">
+          {/* Search Bar — desktop only */}
+          <form onSubmit={handleSearch} className="hidden md:flex flex-1 max-w-2xl mx-4">
+            <div className="relative w-full">
               <input
                 type="text"
                 value={searchQuery}
@@ -207,6 +207,14 @@ const Header = () => {
 
           {/* Right Side Actions */}
           <div className="flex items-center gap-2 flex-shrink-0">
+            {/* Mobile search icon */}
+            <button
+              onClick={() => navigate('/products')}
+              className="md:hidden p-2 min-w-[44px] min-h-[44px] flex items-center justify-center text-gray-600 hover:text-primary-600 transition-colors"
+              aria-label={t('common.search')}
+            >
+              <FiSearch className="w-5 h-5" />
+            </button>
             {/* User */}
             {isAuthenticated ? (
               <UserDropdown user={user} onLogout={handleLogout} t={t} />

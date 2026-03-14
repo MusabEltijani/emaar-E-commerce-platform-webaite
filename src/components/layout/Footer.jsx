@@ -23,7 +23,7 @@ const Footer = () => {
               <img
                 src="/assets/logo.svg"
                 alt="Emaar Logo"
-                className="h-12 w-auto object-contain"
+                className="h-12 w-auto object-contain brightness-0 invert"
               />
             </div>
             <p className="text-gray-400 text-sm leading-relaxed mb-6">
@@ -145,7 +145,7 @@ const Footer = () => {
             <p className="text-gray-400 text-sm mb-4">
               {t('footer.newsletterText') || 'احصل على آخر الأخبار والعروض الحصرية'}
             </p>
-            <form onSubmit={handleSubscribe} className="flex gap-2">
+            <form onSubmit={handleSubscribe} className="flex flex-col sm:flex-row gap-2">
               <input
                 type="email"
                 value={email}
