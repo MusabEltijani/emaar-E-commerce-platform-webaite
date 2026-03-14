@@ -27,7 +27,7 @@ jobs:
       - name: 🔨 Build
         run: npm run build
         env:
-          VITE_API_BASE_URL: /api
+          VITE_API_BASE_URL: https://api.emaar.sd
 
       - name: 📂 Deploy dist to FTP
         uses: SamKirkland/FTP-Deploy-Action@4.3.0
