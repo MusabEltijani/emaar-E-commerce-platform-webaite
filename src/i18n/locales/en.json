@@ -86,6 +86,7 @@
     "featured": "Featured",
     "filter": "Filter",
     "sort": "Sort",
+    "searchByName": "Search products by name...",
     "sortBy": "Sort By",
     "priceAsc": "Price: Low to High",
     "priceDesc": "Price: High to Low",

@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useQuery } from '@tanstack/react-query';
 import { useDispatch, useSelector } from 'react-redux';
+import { FiSearch } from 'react-icons/fi';
 import { productsAPI } from '../services/api/products';
 import { categoriesAPI } from '../services/api/categories';
 import { brandsAPI } from '../services/api/brands';
@@ -12,8 +13,6 @@ import ViewToggle from '../components/common/ViewToggle';
 import AvailabilityFilter from '../components/filters/AvailabilityFilter';
 import PriceRangeSlider from '../components/filters/PriceRangeSlider';
 import ActiveFilters from '../components/filters/ActiveFilters';
-import Loader from '../components/common/Loader';
-import Input from '../components/common/Input';
 import Button from '../components/common/Button';
 import { SkeletonProductCard } from '../components/common/Skeleton';
 import { setViewMode, setAvailabilityFilter, setPriceRangeFilter } from '../store/slices/uiSlice';
@@ -130,12 +129,26 @@ const Products = () => {
   return (
     <div className="container mx-auto px-4 py-8">
       {/* Header with View Toggle */}
-      <div className="mb-8 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+      <div className="mb-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">{t('products.title')}</h1>
           <p className="text-gray-600">{pagination?.total ?? productsList.length} {t('common.products')}</p>
         </div>
         <ViewToggle viewMode={viewMode} onViewChange={handleViewChange} />
+      </div>
+
+      {/* Search by name bar */}
+      <div className="mb-8">
+        <div className="relative max-w-2xl">
+          <input
+            type="text"
+            value={filters.search}
+            onChange={(e) => handleFilterChange('search', e.target.value)}
+            placeholder={t('products.searchByName')}
+            className="w-full px-4 py-3 pr-12 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent text-gray-900 shadow-sm"
+          />
+          <FiSearch className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" />
+        </div>
       </div>
       <div className="flex flex-col md:flex-row gap-8">
         {/* Filters Sidebar */}
@@ -143,16 +156,6 @@ const Products = () => {
           <div className="bg-white rounded-xl shadow-sm p-6 sticky top-24 border border-gray-100 space-y-6">
             <h3 className="text-xl font-bold">{t('products.filter')}</h3>
             
-            {/* Search */}
-            <div>
-              <Input
-                label={t('common.search')}
-                value={filters.search}
-                onChange={(e) => handleFilterChange('search', e.target.value)}
-                placeholder={t('common.search')}
-              />
-            </div>
-
             {/* Availability Filter */}
             <div className="border-t border-gray-200 pt-4">
               <AvailabilityFilter
